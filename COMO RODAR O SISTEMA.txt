@@ -1,0 +1,276 @@
+=====================================================================
+  EM CASA BURGUER - GESTÃO DE CARDÁPIO E ESTOQUE
+  Passo a passo para rodar o sistema (com o banco de dados)
+=====================================================================
+
+O sistema tem duas partes que precisam estar funcionando juntas:
+
+  1) O BANCO DE DADOS (MySQL/MariaDB, que vem no XAMPP)
+     -> guarda os itens do cardápio, ingredientes, estoque etc.
+
+  2) O SERVIDOR (Node.js)
+     -> roda o código do sistema e mostra as telas no navegador.
+
+O GitHub guarda só o código. O banco é criado na sua máquina no
+passo 6, a partir do arquivo "database/schema.sql".
+
+Tempo estimado: 15 a 20 minutos na primeira vez.
+Sistema operacional: as instruções são para Windows.
+
+
+---------------------------------------------------------------------
+PASSO 1 - INSTALAR O NODE.JS
+---------------------------------------------------------------------
+
+O Node.js é o que executa o servidor do sistema.
+
+  1. Acesse: https://nodejs.org
+  2. Baixe a versão "LTS" (a recomendada).
+     O sistema precisa do Node.js 18 ou mais novo.
+  3. Instale clicando em "Next" até o fim (pode deixar tudo padrão).
+  4. Para conferir, abra o "Prompt de Comando" (aperte a tecla
+     Windows, digite cmd e dê Enter) e digite:
+
+        node -v
+
+     Deve aparecer algo como: v22.12.0
+     Se aparecer "não é reconhecido como um comando", feche e abra
+     o Prompt de novo, ou reinicie o computador.
+
+  Junto com o Node.js vem o "npm", que instala as bibliotecas do
+  projeto. Confira com:
+
+        npm -v
+
+
+---------------------------------------------------------------------
+PASSO 2 - INSTALAR O XAMPP (BANCO DE DADOS)
+---------------------------------------------------------------------
+
+O XAMPP traz o MySQL/MariaDB (o banco) e o phpMyAdmin (para ver
+as tabelas pelo navegador).
+
+  1. Acesse: https://www.apachefriends.org
+  2. Baixe a versão para Windows e instale.
+     Pode deixar a pasta padrão (C:\xampp).
+     Na lista de componentes, o importante é deixar marcado
+     "MySQL" e "phpMyAdmin" (o "Apache" também, para usar o
+     phpMyAdmin).
+
+
+---------------------------------------------------------------------
+PASSO 3 - LIGAR O BANCO DE DADOS
+---------------------------------------------------------------------
+
+  1. Abra o "XAMPP Control Panel".
+  2. Na linha "MySQL", clique em "Start".
+     O nome "MySQL" deve ficar com fundo verde e aparecer a porta
+     3306.
+  3. (Opcional) Na linha "Apache", clique em "Start" se quiser usar
+     o phpMyAdmin depois.
+
+  IMPORTANTE: o MySQL precisa estar ligado TODA VEZ que for usar o
+  sistema. Se fechar o XAMPP ou reiniciar o PC, ligue de novo.
+
+
+---------------------------------------------------------------------
+PASSO 4 - BAIXAR O PROJETO
+---------------------------------------------------------------------
+
+Escolha UMA das opções:
+
+  OPÇÃO A - Baixar o ZIP (mais simples)
+    1. Acesse:
+       https://github.com/Scramjat/Em-Casa-Burguer---projeto-de-segunda
+    2. Clique no botão verde "Code" e depois em "Download ZIP".
+    3. Extraia o ZIP em uma pasta (ex.: Documentos\emcasaburguer).
+
+  OPÇÃO B - Usar o Git (se tiver o Git instalado)
+    No Prompt de Comando, digite:
+
+        git clone https://github.com/Scramjat/Em-Casa-Burguer---projeto-de-segunda.git
+
+  Depois, entre na pasta do projeto pelo Prompt de Comando.
+  Dica: abra a pasta no Explorador de Arquivos, clique na barra de
+  endereço, apague o que estiver lá, digite cmd e dê Enter. O Prompt
+  já abre dentro da pasta.
+
+  A pasta certa é a que tem o arquivo "package.json" dentro.
+
+
+---------------------------------------------------------------------
+PASSO 5 - INSTALAR AS BIBLIOTECAS E CONFIGURAR
+---------------------------------------------------------------------
+
+  5.1. Instale as bibliotecas do projeto (precisa de internet):
+
+        npm install
+
+       Vai criar uma pasta chamada "node_modules". Isso é normal.
+
+  5.2. Crie o arquivo de configuração ".env" copiando o exemplo:
+
+        copy .env.example .env
+
+  5.3. Abra o arquivo ".env" no Bloco de Notas e confira:
+
+        PORT=3000
+        DB_HOST=127.0.0.1
+        DB_PORT=3306
+        DB_USER=root
+        DB_PASSWORD=
+        DB_NAME=emcasaburger
+
+       - No XAMPP padrão o usuário é "root" e a senha é VAZIA, então
+         normalmente não precisa mudar nada.
+       - Se o seu MySQL tiver senha, coloque depois do "=" em
+         DB_PASSWORD (ex.: DB_PASSWORD=minhasenha).
+       - Se o MySQL do seu XAMPP estiver em outra porta (ex.: 3307),
+         troque o DB_PORT.
+
+
+---------------------------------------------------------------------
+PASSO 6 - CRIAR O BANCO DE DADOS
+---------------------------------------------------------------------
+
+Com o MySQL ligado no XAMPP (passo 3), rode:
+
+        npm run db:init
+
+Deve aparecer:  Banco "emcasaburger" criado com sucesso.
+
+Isso cria o banco "emcasaburger" com todas as tabelas:
+  - item_menu ............ itens do cardápio
+  - categoria_item ....... categorias (Smash, Tradicional, Bebida...)
+  - requer ............... ingredientes de cada item (ficha técnica)
+  - ingredientes ......... estoque
+  - movimento_de_estoque . histórico de entradas e saídas
+  - tipo_movimento ....... tipos de movimento (entrada, saída...)
+
+O banco começa vazio: só com as 5 categorias padrão e os tipos de
+movimento. Os itens e ingredientes são cadastrados pelo sistema.
+
+  ATENÇÃO: este comando APAGA o banco "emcasaburger" e cria de novo.
+  Rode só na primeira vez (ou se quiser zerar tudo). Nas próximas
+  vezes que for usar o sistema, pule este passo.
+
+  Alternativa sem o comando: abra http://localhost/phpmyadmin, vá na
+  aba "Importar", escolha o arquivo "database/schema.sql" e clique em
+  "Importar". O resultado é o mesmo.
+
+
+---------------------------------------------------------------------
+PASSO 7 - LIGAR O SISTEMA
+---------------------------------------------------------------------
+
+        npm start
+
+Deve aparecer:  Em Casa Burguer rodando em http://localhost:3000
+
+Agora abra o navegador e acesse:
+
+        http://localhost:3000
+
+Pronto! O sistema está funcionando.
+
+  - Deixe a janela do Prompt de Comando ABERTA enquanto usa o
+    sistema. Se fechar, o sistema para.
+  - Para desligar: clique na janela do Prompt e aperte Ctrl + C.
+
+
+---------------------------------------------------------------------
+RESUMO - DA SEGUNDA VEZ EM DIANTE
+---------------------------------------------------------------------
+
+Depois de tudo instalado, para usar de novo é só:
+
+  1. Abrir o XAMPP e dar "Start" no MySQL.
+  2. Abrir o Prompt de Comando na pasta do projeto.
+  3. Rodar:   npm start
+  4. Acessar: http://localhost:3000
+
+(Não precisa rodar "npm install" nem "npm run db:init" de novo.)
+
+
+---------------------------------------------------------------------
+COMO USAR O SISTEMA (ORDEM SUGERIDA)
+---------------------------------------------------------------------
+
+  1. ESTOQUE: cadastre os ingredientes (nome, unidade, quantidade
+     inicial e estoque mínimo).
+  2. CARDÁPIO: cadastre os itens (nome, categoria, preço e
+     descrição). Na "Ficha técnica" do item, informe os ingredientes
+     usados em cada unidade.
+     - Hambúrguer é dividido em Smash e Tradicional.
+     - Dá para criar categorias novas em "+ Nova categoria" ou no
+       botão "Categorias".
+  3. MOVIMENTAÇÕES: registre entradas (compras), saídas, ajustes e
+     perdas. "Registrar venda" no cardápio dá baixa automática nos
+     ingredientes do item.
+  4. PAINEL: resumo do cardápio e alerta de ingredientes que estão
+     abaixo do estoque mínimo.
+
+  O botão de sol/lua no canto superior direito troca entre modo
+  claro e escuro.
+
+  Para ver os dados direto no banco: ligue o Apache no XAMPP, acesse
+  http://localhost/phpmyadmin e abra o banco "emcasaburger".
+
+
+---------------------------------------------------------------------
+PROBLEMAS COMUNS
+---------------------------------------------------------------------
+
+PROBLEMA: "node" ou "npm" não é reconhecido como um comando.
+SOLUÇÃO:  O Node.js não foi instalado ou o Prompt foi aberto antes
+          da instalação. Feche e abra o Prompt, ou reinicie o PC.
+
+PROBLEMA: Ao abrir o sistema aparece "Não foi possível conectar ao
+          banco de dados", ou no db:init aparece "ECONNREFUSED".
+SOLUÇÃO:  Normalmente o MySQL não está ligado: abra o XAMPP e clique
+          em "Start" no MySQL. Confira também o DB_PORT no .env.
+          Se o MySQL estiver ligado, o banco pode ainda não ter sido
+          criado: rode  npm run db:init  (passo 6).
+
+PROBLEMA: "Access denied for user 'root'".
+SOLUÇÃO:  O seu MySQL tem senha. Coloque a senha em DB_PASSWORD no
+          arquivo .env e rode o comando de novo.
+
+PROBLEMA: "Unknown database 'emcasaburger'" ou as telas não carregam
+          os dados.
+SOLUÇÃO:  O banco ainda não foi criado. Rode:  npm run db:init
+
+PROBLEMA: O MySQL não liga no XAMPP (fica vermelho ou dá erro de
+          porta 3306 em uso).
+SOLUÇÃO:  Já existe outro MySQL/MariaDB instalado usando a porta
+          3306. Pare o outro (em "Serviços" do Windows) ou use o que
+          já está instalado, colocando usuário, senha e porta dele
+          no arquivo .env.
+
+PROBLEMA: "EADDRINUSE" / porta 3000 em uso ao rodar npm start.
+SOLUÇÃO:  O sistema já está aberto em outra janela, ou outro programa
+          usa a porta 3000. Feche a outra janela ou troque PORT=3000
+          por PORT=3001 no .env e acesse http://localhost:3001
+
+PROBLEMA: "Cannot find module 'express'" (ou outro módulo).
+SOLUÇÃO:  Faltou instalar as bibliotecas. Rode:  npm install
+
+PROBLEMA: A página abre, mas sem estilo ou com fontes diferentes.
+SOLUÇÃO:  As fontes vêm da internet (Google Fonts). Sem internet o
+          sistema funciona normalmente, só com outra fonte.
+
+
+---------------------------------------------------------------------
+O QUE VEM NO PROJETO
+---------------------------------------------------------------------
+
+  database/schema.sql ... script do banco de dados (tabelas)
+  scripts/init-db.js .... cria o banco a partir do schema.sql
+  src/ .................. servidor (rotas, regras de negócio, SQL)
+  public/ ............... telas (HTML, CSS, JavaScript e logo)
+  .env.example .......... modelo do arquivo de configuração
+  package.json .......... lista de bibliotecas e comandos (npm)
+  README.md ............. explicação técnica do projeto
+
+Tecnologias: Node.js + Express, MySQL/MariaDB, HTML, CSS e
+JavaScript.

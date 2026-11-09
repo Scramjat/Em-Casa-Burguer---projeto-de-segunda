@@ -18,6 +18,9 @@ Node.js + Express 5 · MySQL/MariaDB (`mysql2`) · HTML, CSS e JavaScript puro n
 
 ## Como rodar
 
+> Passo a passo completo, do zero (instalar Node.js e XAMPP, criar o banco e resolver problemas comuns):
+> veja o arquivo [`COMO RODAR O SISTEMA.txt`](COMO%20RODAR%20O%20SISTEMA.txt).
+
 1. Inicie o MySQL pelo XAMPP.
 2. Instale as dependências:
    ```bash
