@@ -1,0 +1,17 @@
+{
+  "name": "emcasaburguer-web",
+  "version": "1.0.0",
+  "description": "Gestão de cardápio e estoque do Em Casa Burguer (Piracicaba)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "db:init": "node scripts/init-db.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^18.0.5",
+    "express": "^5.2.1",
+    "mysql2": "^3.24.5"
+  }
+}
